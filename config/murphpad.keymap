@@ -4,25 +4,28 @@
  * SPDX-License-Identifier: MIT
  */
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/rgb.h>
 
-#define TIMEOUT 300
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-/* Layer Names*/
-#define DEFAULT 0
-#define FN      1
+#define NumPad      0
+#define FN_Layer    1
+#define Vidya       2
+#define RGB         3
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 &encoder_1 {
     status = "okay";
 };
 
-&encoder_2 {
-    status = "okay";
-};
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 /* Combo Definitions*/
 / {
@@ -50,41 +53,83 @@
         };
     };
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     sensors {
         compatible = "zmk,keymap-sensors";
-        sensors = <&encoder_1 &encoder_2>;
+        sensors = <&encoder_1>;
     };
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     keymap0: keymap {
         compatible = "zmk,keymap";
 
         default_layer {
-        label = "default layer";
+        label = "[NumPad]";
             bindings = <
-                &bt BT_CLR       &kp F1       &kp F2          &kp F3            &kp F4
-                &rgb_ug RGB_TOG  &kp KP_NUM   &kp KP_DIVIDE   &kp KP_MULTIPLY   &kp KP_MINUS
-                &rgb_ug RGB_EFF  &kp KP_N7    &kp KP_N8       &kp KP_N9         &kp KP_PLUS
-                &kp C_MUTE       &kp KP_N4    &kp KP_N5       &kp KP_N6         &trans
-                &mo FN           &kp KP_N1    &kp KP_N2       &kp KP_N3         &kp KP_ENTER
-                &kp BSPC         &kp KP_N0    &trans          &kp KP_DOT        &trans
+                &trans          &kp ESCAPE      &rgb_ug RGB_TOG &kp DEL	        kp BSPC   
+                &trans		    &kp KP_NLCK     &kp KP_DIVIDE   &kp KP_MULTIPLY &kp KP_MINUS    
+                &trans	    	&kp KP_N7       &kp KP_N8       &kp KP_N9       &kp KP_PLUS   
+                &kp C_MUTE      &kp KP_N4       &kp KP_N5       &kp KP_N6       &trans
+                &mo 1           &kp KP_N1       &kp KP_N2       &kp KP_N3       &kp KP_ENTER
+                &kp SPACE       &kp KP_N0       &trans          &kp KP_DOT      &trans
             >;
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
+			sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
 
+    	};
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        FN_Layer {
+        label = "[FN_Layer]";
+            bindings = <
+                &trans            &trans            &tog 3            &bt BT_CLR        &out OUT_TOG
+                &trans            &trans            &trans            &trans            &trans
+                &trans            &kp HOME          &kp UP            &kp PG_UP         &trans
+                &kp C_PP          &kp LEFT          &trans            &kp RIGHT         &trans    
+                &trans            &kp END           &kp DOWN          &kp PG_DN         &ext_power EP_TOG
+                &tog 2		      &kp INS           &trans            &kp DEL           &trans           
+            >;  
+			sensor-bindings = <&inc_dec_kp C_NEXT C_PREV>;
+                
         };
 
-        fn_layer {
-        label = "fn layer";
-            bindings = <
-                &trans      &out OUT_TOG     &bt BT_PRV       &bt BT_NXT       &trans
-                &trans      &trans           &trans           &trans           &trans
-                &trans      &rgb_ug RGB_HUD  &rgb_ug RGB_SPI  &rgb_ug RGB_HUI  &trans
-                &bt BT_CLR  &rgb_ug RGB_EFR  &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &trans
-                &trans      &rgb_ug RGB_BRD  &rgb_ug RGB_SPD  &rgb_ug RGB_BRI  &trans
-                &kp DEL     &rgb_ug RGB_SAD  &trans           &rgb_ug RGB_SAI  &trans
-            >;
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        Vidya {
+		label = "[Vidya]";
+
+            bindings = <
+                &trans            &kp LC(LS(PG_UP)) &kp LC(LS(PG_DN))  &kp LC(LA(LS(H))) &kp LC(LA(LS(V)))    
+                &trans            &kp LC(LS(E))     &kp LC(LS(C))      &kp LC(LS(M))     &trans
+                &trans            &trans	        &trans	           &trans            &kp ESCAPE
+                &kp C_MUTE        &kp LEFT          &trans             &kp RIGHT	     &trans    
+                &tog 2            &trans            &trans             &trans            &kp LA(TAB)
+                &kp LS(TAB)	      &kp LC(LS(S))     &trans             &trans            &trans           
+            >;  
+			sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+                
         };
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        RBB {
+		label = "[Lights]";
+
+            bindings = <
+                &trans            &mo 4	            &mo 5		      &mo 6	            &mo 7 
+                &trans            &trans            &trans	          &trans	        &trans
+                &trans            &trans            &trans	          &trans	        &rgb_ug RGB_EFR
+                &rgb_ug RGB_TOG   &trans            &trans            &trans	        &trans    
+                &tog 3            &trans            &trans            &trans            &rgb_ug RGB_EFF
+                &trans	   	      &trans            &trans            &trans            &trans           
+            >;  
+			sensor-bindings = <&inc_dec_kp 24 14>;
+                
+        };
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     };
 };
